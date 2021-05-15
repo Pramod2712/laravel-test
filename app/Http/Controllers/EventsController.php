@@ -97,11 +97,12 @@ class EventsController extends BaseController
      */
 
     public function getEventsWithWorkshops() {
-        $events = Event::all();
+        $events = Event::with('workshops')->get();
         $result = [];
         foreach ($events as $key => $event) {
-           $result[][] = $event;
-           $result[]['workshops'] = $event->workshops;
+           if($event->workshops->isNotEmpty()){
+                $result[] = [$event,'workshops'=>$event->workshops];
+           }
         }
         echo json_encode($result);exit;
     }
